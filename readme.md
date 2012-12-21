@@ -1,6 +1,7 @@
-#Testeador let you make a serie test to ensure that your site is ready to launch.
+#Testeador
+##let you make a serie test to ensure that your site is ready to launch.
 
-##This are the tests:
+###This are the tests:
 
 * Get Favicon. You can check that there is actually a favicon in your site
 * URL Canonicalization. Verify if you are redirecting to www.yourdomain.com in case you are using yourdomain.com
@@ -15,5 +16,5 @@
 * Firewall Attack. Test your page against a simple attack www.yoursite.com/index.php?%20union. Your site must respond accordinly
 * Validate W3C. Validate that your code is W3C complaint http://validator.w3.org/. Thanks W3c
 
-##Joomla Specific
+###Joomla Specific
 * Old Browser detection. Verify that you can handle old browser using the BrowserUpdateWarning.js plugin
