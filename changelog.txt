@@ -1,0 +1,9 @@
+New 0.613: 
+Added HotLinking Validation
+Aditional information in some errors
+Detect character encoding
+Select if want to make the firewall, yslow & pagespeed & w3c validation
+Check if there is css inside the page
+
+New 0.612: Added W3C validation.
+New 0.611: Added Link to pagespeed, yslow report
