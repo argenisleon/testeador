@@ -1,4 +1,4 @@
-[11-Dec-2012 08:29:06] PHP Parse error:  syntax error, unexpected ')', expecting ',' or ';' in /home/moodcom/public_html/testeador/index.php on line 340
+1-Dec-2012 08:29:06] PHP Parse error:  syntax error, unexpected ')', expecting ',' or ';' in /home/moodcom/public_html/testeador/index.php on line 340
 [11-Dec-2012 08:29:22] PHP Parse error:  syntax error, unexpected T_INC in /home/moodcom/public_html/testeador/index.php on line 342
 [11-Dec-2012 08:29:25] PHP Parse error:  syntax error, unexpected T_INC in /home/moodcom/public_html/testeador/index.php on line 342
 [11-Dec-2012 08:29:58] PHP Parse error:  syntax error, unexpected T_INC in /home/moodcom/public_html/testeador/index.php on line 342

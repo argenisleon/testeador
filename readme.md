@@ -18,3 +18,8 @@
 
 ###Joomla Specific
 * Old Browser detection. Verify that you can handle old browser using the BrowserUpdateWarning.js plugin
+
+##Authors
+
+Argenis Leon
+@argenisleon
