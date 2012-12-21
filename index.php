@@ -4,25 +4,29 @@
 	argenisleon@gmail.com. 
 	Twitter: @argenisleon.
 	
-	Mood Agency. Todos Los Derechos Reservados
+	Mood Agency. Todos Los Derechos Reservados http://mood.com.ve
 	
 	Todo. 
 
 	Detectar Doctype
 	icono de carga al momento de hacer el yslow page speed
-	css javascript dentro de la pagina
+	javascript dentro de la pagina
 	htaccess que este abilitada la compresion y los expiration date
-	Verificar si el tamano de las imagenes es igual al de la ventana donde se despliegan
-	
-	de joomla
+
+	Joomla
+	Try to detect this http://www.hostknox.com/tutorials/joomla/optimization
 	Verificar si el administrador esta protegido por plugin OSE
     Verificar que el cache de joomla este actido
-	probar validacion de http://html5.validator.nu
 
-	http://www.hostknox.com/tutorials/joomla/optimization
  -->
 <?php
-	$scoreParam = $_GET['score'];
+
+    define("YSLOWTRESHOLD", 90);
+    define("PAGESPEEDTRESHOLD", 90);
+    define("USERNAME_GTM", 'argenisleon@gmail.com');
+    define("PASSWORD_GTM", '05224202ae927d4145d8693c24e0fccf');
+
+    $scoreParam = $_GET['score'];
 	$validateParam = $_GET['validate'];
 	$firewallParam = $_GET['validate'];
 ?>
@@ -72,7 +76,7 @@
 				<input type="checkbox" name="validate" value="w3c" <? echo ($validateParam=='w3c' ? ' checked="checked"' : '') ?>>Validate W3C 
 			</label>
 			<label class="checkbox">
-				<input type="checkbox" name="firewall" value="test" <? echo ($validateFirewall=='test' ? ' checked="checked"' : '') ?>>Test Firewall
+				<input type="checkbox" name="firewall" value="test" <? echo ($firewallParam=='test' ? ' checked="checked"' : '') ?>>Test Firewall
 			</label>
 			
 			
@@ -83,19 +87,7 @@
 		
 <?php
 
-
-	if (!isset($_GET['host']))
-		return;
-
-	$errorCount = 0;
-    $warningCount = 0;
-    $successCount = 0;
-	
-	define("YSLOWTRESHOLD", 90);
-	define("PAGESPEEDTRESHOLD", 90);
-	define("USERNAME_GTM", 'argenisleon@gmail.com');
-	define("PASSWORD_GTM", '05224202ae927d4145d8693c24e0fccf');
-	
+    if (!isset($_GET['host'])) return;
 
 	// Load the favicon test class.
 	require_once('php/favicon.inc.php'); // Thanks to http://www.controlstyle.com/articles/programming/text/php-favicon/
@@ -108,35 +100,35 @@
 	
 	$url = $_GET['host'];
 	$url = "http://".$_GET['host'];
-	
-	str_replace("www.", "", $url); // strip www. from the url so we can check that the returned URL www 
-	
-	$errorURL = $url."/asdhgfakdsgfaksdgfasgdfghk.html"; 
-	$firewallTestURL = $url."/index.php?%20union"; 
+    $errorURL = $url."/asdhgfakdsgfaksdgfasgdfghk.html";
+    $firewallTestURL = $url."/index.php?%20union";
+
+    $errorCount = 0;
+    $warningCount = 0;
+    $passCount = 0;
+
+    str_replace("www.", "", $url); // strip www. from the url so we can check that the returned URL www
 
 	// Verify the domain can be resolved
 	$dataReturned = getDataFromURL ($url);
 	$html = $dataReturned['html'];
 	
 	if (isset($dataReturned['error'])) {
-		//echo "Domain can not be resolved";
+		//Domain can not be resolved;
 		echo $dataReturned['error'] ;
 		fatal();
 		exit;
 	}
-	
+	//----------------------------------------------- Start Testing
 	echo "<h3>Host</h3>";
 	echo  "<p>".$url."</p>";
+
 	//------------------------------------------------ Check Favicon
 	echo "<h3>Favicon</h3>";
 
 	$favicon = new favicon($url, 0);
 	$fv = $favicon->get_ico_url();
-	//echo $favicon->is_ico_exists();
-	
 	echo "<img src='". $fv ."'/>";
-	//echo "<img src='". $fv ."' width='32px'/>";
-	//echo "<img src='". $fv ."' width='64px'/>";
 
 	//------------------------------------------------ Canonicalization
 	echo "<h3>Canonicalization</h3>";
@@ -144,8 +136,7 @@
 	$parsedURL = parse_url ($dataReturned['effectiveURL']);
 	
 	echo "Check if the user is redirect to the www. domain";
-	//.$dataReturned['effectiveURL'];
-	
+
 	if (preg_match("/www./i", $parsedURL['host'])) {
 		pass();
 	} else {
@@ -153,7 +144,6 @@
 	}
 	
 	//------------------------------------------------ Check Title and metadata
-	
 	echo "<h3>Title and Metadata</h3>";
 	echo "Looking for the 'Joomla' word or empty tags...";
 	
@@ -200,7 +190,6 @@
 		warning("HTML encoding not found");
 	
 	//------------------------ Title
-	
 	echo "<h4>Title</h4>";	 	
 		
 	foreach ($nodelist as $n){
@@ -284,7 +273,6 @@
 			pass();
 		 else 
 			fatal("UA- not found");
-		
 
 	//------------------------------------------------ Check Google Webmaster Tools
 	echo "<h3>Google Webmaster Tools</h3>";
@@ -301,7 +289,7 @@
 	// grab all the a tags on the page	
 	$attrs = $xpath->query("//a");
 
-	$NotSEFCount=0;
+	$NotSEFCount = 0;
 	
 	if ($attrs->length>0)
 		echo "Not SEF URL's"; 
@@ -311,10 +299,9 @@
 		$parsedURL = parse_url ($linkURL);
 		//print_r (isset($parsedURL['query']));
 		
-		if (isset($parsedURL['query'])) { 
-			
+		if (isset($parsedURL['query'])) {
 			$NotSEFCount++;
-			echo "<br /><a href='$linkURL'>$linkURL</a>";
+			echo "<br /><a href='".$linkURL."'>$linkURL</a>";
 		}
 	}
 	if ($NotSEFCount==0) {
@@ -322,8 +309,6 @@
 	} else {
 		warning($NotSEFCount. " Not SEF link of ".$attrs->length." detected");
 	}
-
-
 	
 	//------------------------------------------------ PageSpeed & Yslow
 	if ($scoreParam == 'pSyS') {
@@ -337,8 +322,6 @@
 		echo "<p>We made and attack! Verify that the site respond accordingly!";
 		echo "<div><iframe class='iframe' src='".$firewallTestURL."'></iframe></div>"; 
 	}
-	//echo INFO;
-	
 	
 	//------------------------------------------------ CSS in home
 	echo "<h3>CSS style in file</h3>";
@@ -385,8 +368,7 @@
 	} else {
 		fatal('We can not test hotlinking. The script domain and the test domain are the same');
 	}
-	//}
-	
+
 	//------------------------------------------------ Done
 	echo "<h3>Done!</h3>";
 	if ($errorCount>0) 
@@ -399,34 +381,30 @@
 	
 	if ($warningCount==0 && $errorCount==0) 
 		pass("Success! Everything looks OK!");
-	
-	
-	
+
 ?>
+    </div>
+  </body>
+</html>
 
 <?php
-	function fatal($text="This is a fatal error."){
-	
+	function fatal($text="This is a fatal error.") {
 		echo '<div class="alert alert-error">  
 			<a class="close" data-dismiss="alert">�</a>  
 			<strong>Error! </strong>'. $text.'</div>';
 		global $errorCount;
 		$errorCount++;
-	
 	}
 
 	function pass($text="You have successfully done it.") {
-	
 		echo '<div class="alert alert-success">  
 			<a class="close" data-dismiss="alert">�</a>  
 			<strong>Success! </strong>'.$text.'</div>';
 		global $passCount;
 		$passCount++;
-	
 	}
 	
 	function warning ($text = "Best check yorself, you're not looking too good") {
-		
 		echo "<div class='alert'>  
 			<a class='close' data-dismiss='alert'>�</a>  
 			<strong>Warning! </strong>".$text."</div>";
@@ -453,8 +431,6 @@
 			die($test->error());
 		}
 		
-		//$testid = $test->get_testid();
-		//echo "<p>Test completed succesfully with ID $testid</p>";
 		$results = $test->results();
 		
 		$pageSpeed = $results['pagespeed_score'];
@@ -462,16 +438,15 @@
 		
 		
 		echo "<p>Page Load Time:".($results['page_load_time']/1000)." seconds"."</p>";
-		
 		echo "<p>Page Bytes:".($results['page_bytes']/1024)." Kb</p>";
 		
-		if ($pageSpeed<=PAGESPEEDTRESHOLD)
+		if ($pageSpeed <= PAGESPEEDTRESHOLD)
 			fatal("pageSpeed score is ". $pageSpeed." must be greater than ".PAGESPEEDTRESHOLD );
 		else
 			pass ("pageSpeed score is ".$pageSpeed );
 		
 		
-		if ($ySlow<=YSLOWTRESHOLD)
+		if ($ySlow <= YSLOWTRESHOLD)
 			fatal("ySlow score is ".$ySlow ." must be greater than ".YSLOWTRESHOLD);
 		else
 			pass("ySlow score is ".$ySlow);
@@ -487,9 +462,7 @@
 	}
 
 	function findString($text, $cadena) {
-		
 		return strpos($text, $cadena);
-			
 	}
 
 	function getDataFromURL($url) {
@@ -520,28 +493,21 @@
 	}
 	// http://stackoverflow.com/questions/1459739/php-serverhttp-host-vs-serverserver-name-am-i-understanding-the-ma
 	function getHost() {
-    if ($host = $_SERVER['HTTP_X_FORWARDED_HOST'])
-    {
-        $elements = explode(',', $host);
-        $host = trim(end($elements));
-    }
-    else
-    {
-        if (!$host = $_SERVER['HTTP_HOST'])
-        {
-            if (!$host = $_SERVER['SERVER_NAME'])
+        if ($host = $_SERVER['HTTP_X_FORWARDED_HOST']) {
+            $elements = explode(',', $host);
+            $host = trim(end($elements));
+        } else {
+            if (!$host = $_SERVER['HTTP_HOST'])
             {
-                $host = !empty($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '';
+                if (!$host = $_SERVER['SERVER_NAME'])
+                {
+                    $host = !empty($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '';
+                }
             }
         }
-    }
-    // Remove port number from host
-    $host = preg_replace('/:\d+$/', '', $host);
-	
+        // Remove port number from host
+        $host = preg_replace('/:\d+$/', '', $host);
+
     return trim($host);
-	
 }
 ?>
-</div>
-</body>
-</html>
