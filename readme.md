@@ -1,5 +1,5 @@
 #Testeador
-##let you make a serie test to ensure that your site is ready to launch.
+##Automatic tests to ensure that your site is ready to launch.
 
 ###This are the tests:
 
